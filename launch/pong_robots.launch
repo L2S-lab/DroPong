@@ -1,0 +1,86 @@
+<launch>
+
+
+  <!-- === INITIAL POSITIONS OF ROBOTS AND DRONE === -->
+  <arg name="robot_1_pos_x" default="0.0"/>
+  <arg name="robot_1_pos_y" default="2.0"/>
+
+  <arg name="robot_2_pos_x" default="0.0"/>
+  <arg name="robot_2_pos_y" default="-2.0"/>
+
+  <arg name="drone_pos_x" default="0.0"/>
+  <arg name="drone_pos_y" default="0.0"/>
+  <arg name="drone_pos_z" default="1.0"/>
+
+  <arg name="simu" default="false"/>
+
+  
+
+
+<node name="ponglib" pkg="pong_robots" type="ponglib.py" output="screen">
+  <param name="simu" type="bool" value="$(arg simu)"/>
+  <remap from="/cmd_vel" to="/drone/cmd_vel" if="$(arg simu)"/>
+</node>
+
+
+<group if="$(arg simu)">
+
+
+  <!--  JOYPAD FOR ROBOT 1 ONLY -->
+  <!--
+  <group ns = "joypad1">
+  	<node pkg="joy" type="joy_node" name="joy_node" output="screen"/>
+	<node pkg="pong_robots" type="joypad_cmd_vel.py" name="joy_cmd_vel" output="screen">
+		<remap from="/joypad1/cmd_vel" to="/robot_1/cmd_vel" />
+	</node>
+  </group>
+  -->
+
+
+  <!-- ONE JOYPAD FOR THE TWO ROBOTS -->
+  <group ns = "joypad">
+  	<node pkg="joy" type="joy_node" name="joy_node" output="screen"/>
+	<node pkg="pong_robots" type="joypad_two_cmd_vel.py" name="joy_two_cmd_vel" output="screen">
+		<remap from="/joypad/cmd_vel1" to="/robot_1/cmd_vel" />
+		<remap from="/joypad/cmd_vel2" to="/robot_2/cmd_vel" />
+	</node>
+  </group>
+
+
+  <node pkg="pong_robots" type="arena_marker.py" name="arena_marker" output="screen" />
+
+
+  <group ns = "robot_1">
+    <node pkg="pong_robots" type="virtual_robot.py" name="robot_1" output="screen">
+      <param name="x0" type="double" value="$(arg robot_1_pos_x)" />
+      <param name="y0" type="double" value="$(arg robot_1_pos_y)" />
+      <param name="child_frame_id" value="robot_1" />
+      <remap from="/robot_1/pose" to="/natnet_ros/s1_1/pose"/>
+    </node>
+  </group>
+
+
+  <group ns = "robot_2">
+    <node pkg="pong_robots" type="virtual_robot.py" name="robot_2" output="screen">
+      <param name="x0" type="double" value="$(arg robot_2_pos_x)" />
+      <param name="y0" type="double" value="$(arg robot_2_pos_y)" />
+      <param name="child_frame_id" value="robot_2" />
+      <remap from="/robot_2/pose" to="/natnet_ros/s1_2/pose"/>
+    </node>
+  </group>
+
+
+  <group ns = "drone">
+    <node pkg="pong_robots" type="virtual_drone.py" name="drone" output="screen">    
+      <param name="x0" type="double" value="$(arg drone_pos_x)" />
+      <param name="y0" type="double" value="$(arg drone_pos_y)" />
+      <param name="z0" type="double" value="$(arg drone_pos_z)" />
+      <param name="child_frame_id" value="drone" />
+      <remap from="/drone/pose" to="/natnet_ros/rmtt_1/pose"/>
+    </node>
+  </group>
+  
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find pong_robots)/rviz/pong.rviz"/>
+</group>
+
+</launch>

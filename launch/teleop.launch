@@ -1,0 +1,70 @@
+<launch>
+
+  <!-- === Key binding for moving the robot === -->
+  <!-- === Keep Num-key on while using numpad === -->
+  <!-- === Keep namespaces same as the simu_pong.launch === -->
+
+
+  <arg name="robot_1_front" default="r"/>
+  <arg name="robot_1_left" default="d"/>
+  <arg name="robot_1_right" default="g"/>
+  <arg name="robot_1_back" default="v"/>
+  <arg name="robot_1_stop" default="f"/>
+  <arg name="robot_1_ccw" default="c"/>
+  <arg name="robot_1_cw" default="b"/>
+  <arg name="robot_1_speed_inc" default="t"/>
+  <arg name="robot_1_speed_dec" default="e"/>
+
+  <arg name="robot_2_front" default="8"/>
+  <arg name="robot_2_left" default="4"/>
+  <arg name="robot_2_right" default="6"/>
+  <arg name="robot_2_back" default="2"/>
+  <arg name="robot_2_stop" default="5"/>
+  <arg name="robot_2_ccw" default="1"/>
+  <arg name="robot_2_cw" default="3"/>
+  <arg name="robot_2_speed_inc" default="9"/>
+  <arg name="robot_2_speed_dec" default="7"/>
+
+  <!-- === Some common parameters === -->
+  <arg name="speed_lim" default="2.0"/>
+  <arg name="repeat_rate" default="0.0"/>
+  <arg name="key_timeout" default="0.5"/>
+
+
+  <group ns = "robot_1">
+    <node pkg="pong_robots" type="teleop_keyboard.py" name="teleop_robot_1" output="screen">
+      <param name="front" value="$(arg robot_1_front)" />
+      <param name="left" value="$(arg robot_1_left)" />
+      <param name="right" value="$(arg robot_1_right)" />
+      <param name="back" value="$(arg robot_1_back)" />
+      <param name="stop" value="$(arg robot_1_stop)" />
+      <param name="turn_ccw" value="$(arg robot_1_ccw)" />
+      <param name="turn_cw" value="$(arg robot_1_cw)" />
+      <param name="speed_inc" value="$(arg robot_1_speed_inc)" />
+      <param name="speed_dec" value="$(arg robot_1_speed_dec)" />
+      <param name="speed_lim" type="double" value="$(arg speed_lim)" />
+      <param name="repeat_rate" type="double" value="$(arg repeat_rate)" />
+      <param name="key_timeout" type="double" value="$(arg key_timeout)" />
+
+    </node>
+  </group>
+
+
+  <group ns = "robot_2">
+    <node pkg="pong_robots" type="teleop_keyboard.py" name="teleop_robot_2" output="screen">
+      <param name="front" value="$(arg robot_2_front)" />
+      <param name="left" value="$(arg robot_2_left)" />
+      <param name="right" value="$(arg robot_2_right)" />
+      <param name="back" value="$(arg robot_2_back)" />
+      <param name="stop" value="$(arg robot_2_stop)" />
+      <param name="turn_ccw" value="$(arg robot_2_ccw)" />
+      <param name="turn_cw" value="$(arg robot_2_cw)" />
+      <param name="speed_inc" value="$(arg robot_2_speed_inc)" />
+      <param name="speed_dec" value="$(arg robot_2_speed_dec)" />
+      <param name="speed_lim" type="double" value="$(arg speed_lim)" />
+      <param name="repeat_rate" type="double" value="$(arg repeat_rate)" />
+      <param name="key_timeout" type="double" value="$(arg key_timeout)" />
+    </node>
+  </group>
+
+</launch>
